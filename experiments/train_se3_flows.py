@@ -47,11 +47,18 @@ class Experiment:
         
     def train(self):
         callbacks = []
-        if self._exp_cfg.debug:
-            log.info("Debug mode.")
+        # Check if we should use local training (no wandb)
+        use_local_training = getattr(self._exp_cfg, 'local_training', False)
+        
+        if self._exp_cfg.debug or use_local_training:
+            if self._exp_cfg.debug:
+                log.info("Debug mode.")
+            else:
+                log.info("Local training mode - no wandb logging.")
             logger = None
-            self._train_device_ids = [self._train_device_ids[0]]
-            self._data_cfg.loader.num_workers = 0
+            if self._exp_cfg.debug:
+                self._train_device_ids = [self._train_device_ids[0]]
+                self._data_cfg.loader.num_workers = 0
         else:
             logger = WandbLogger(
                 **self._exp_cfg.wandb,

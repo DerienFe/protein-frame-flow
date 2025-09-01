@@ -9,7 +9,7 @@ data:
   task: hallucination
 
   # Available tasks: pdb, scope
-  dataset: pdb
+  dataset: scope
 
   loader:
     num_workers: 4
@@ -17,8 +17,11 @@ data:
 
   sampler:
     # Setting for 48GB GPUs
-    max_batch_size: 80
-    max_num_res_squared: 400_000
+    #max_batch_size: 80
+    #max_num_res_squared: 400_000
+    # TW: for AMD MI300X:
+    max_batch_size: 160
+    max_num_res_squared: 800_000
 
 interpolant:
   min_t: 1e-2
@@ -52,6 +55,7 @@ interpolant:
 
 experiment:
   debug: False
+  local_training: True  # Set to True to train locally without wandb
   seed: 123
   num_devices: 2
   warm_start: null
